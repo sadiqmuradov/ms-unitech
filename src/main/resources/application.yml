@@ -1,0 +1,72 @@
+# server:
+  # port: 8081
+
+spring:
+  profiles:
+    active: local
+
+  datasource:
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 20
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
+  #    open-in-view: true
+
+  liquibase:
+    enabled: false
+    change-log: classpath:/db/changelog/changelog-master.yml
+    drop-first: false
+    default-schema: ${DB_SCHEMA:public}
+    database-change-log-table: dbchangelog
+    database-change-log-lock-table: dbchangeloglock
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
+  application:
+    name: ms-uber
+
+springdoc:
+  packagesToScan: az.mpay.uber.controller
+#  paths-to-match: /api/**/transfer/**
+
+management:
+  endpoints:
+    web:
+      base-path: /api/actuator
+      exposure:
+        include: health
+
+transaction-log:
+  processing-interval: PT2M
+
+mpay:
+  url: https://appsb.mpay.az
+  token: uv8mk7dd28kq2q00d0vg6j3cso
+  gate-serial: 606726059414
+  gate-token: 7ps191ltp6au2a1r6p0uah9lev
+  park-token: sv0dc285lgedu7ta763f94lmen
+  bank-details:
+    iban: SE3550000000054910000003
+    bic: PBANUA2XK2R
+    swift: PBANUA2XK2D
+
+uber:
+  url: https://fleet-api.taxi.yandex.net
+  request:
+    park-id: 76db89dc9f854bb7b96690e1b636e969
+    client-id: taxi/park/76db89dc9f854bb7b96690e1b636e969
+    api-key: fKWEsIyknKBcWzzQzHUutYmKSywbVUzoJXIpySzi
+
+    limit: 1000
+    offset: 0

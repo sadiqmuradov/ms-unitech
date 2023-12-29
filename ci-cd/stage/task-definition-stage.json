@@ -1,0 +1,40 @@
+{
+    "family": "sandbox-ms-edv",
+    "executionRoleArn": "arn:aws:iam::541407012130:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::541407012130:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "cpu": "512",
+    "memory": "1024",
+    "volumes": [],
+    "requiresCompatibilities": [
+      "FARGATE"
+    ],
+    "containerDefinitions": [
+      {
+        "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+            "awslogs-group": "/ecs/sandbox-ms-edv",
+            "awslogs-region": "us-east-1",
+            "awslogs-stream-prefix": "ecs"
+          }
+        },
+        "entryPoint": [],
+        "portMappings": [
+          {
+            "hostPort": 8080,
+            "protocol": "tcp",
+            "containerPort": 8080
+          }
+        ],
+        "command": [],
+        "cpu": 0,
+        "mountPoints": [],
+        "volumesFrom": [],
+        "image": "541407012130.dkr.ecr.us-east-1.amazonaws.com/sb-ms-edv:REPLACE_IMAGE_HASH",
+        "name": "sandbox-ms-edv"
+      }
+    ],
+    "placementConstraints": []
+  }
+  

@@ -1,0 +1,34 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/ms_uber_db}
+    #    url: ${DB_URL:jdbc:postgresql://sandbox-rds-postgres.cijqkywi5gr7.us-east-1.rds.amazonaws.com:5432/ms_bulk_transfer_db}
+    username: ${DB_USERNAME:msuber}
+    password: ${DB_PASSWORD:msuber}
+
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    #    properties:
+    #      hibernate:
+    #        format_sql: true
+    #        show_sql: true
+    #        use_sql_comments: true
+
+  liquibase:
+    enabled: true
+
+springdoc:
+  #    hostname: https://local.uber.mpay.az:8081
+  hostname: http://localhost:8081
+
+schedule:
+  cron:
+    expression: 0 */5 * * * *
+
+  fixed-delay:
+    in:
+      milliseconds: 120000
+
+mpay:
+  url: https://wildfly.sdk.finance:8443
+  token: ehosf3isd4fldtmuvn0gqvpmkp

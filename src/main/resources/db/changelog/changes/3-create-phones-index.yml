@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: "3"
+      author: Sadig Muradov
+      changes:
+        - createIndex:
+            indexName: phones_phone_idx
+            tableName: phones
+            columns:
+              - column:
+                  name: phone
