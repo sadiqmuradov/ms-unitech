@@ -1,49 +1,46 @@
 package az.mpay.unitech.model.entity;
 
-import az.mpay.unitech.constant.enums.Currency;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import az.mpay.unitech.constant.enums.Status;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 @Data
+@Builder
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
-@Table(name = "account")
-@Where(clause = "deleted = false")
-public class Account {
+@Table(name = "transfer")
+public class Transfer {
 
     private static final long serialVersionUID = -5784998468015412179L;
 
     @Id
     @Getter
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_seq")
-    @SequenceGenerator(name = "account_seq", sequenceName = "account_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transfer_seq")
+    @SequenceGenerator(name = "transfer_seq", sequenceName = "transfer_id_seq", allocationSize = 1)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(nullable = false)
-    private User user;
+    @Column(nullable = false)
+    private Long senderAccountId;
 
     @Column(nullable = false)
-    private BigDecimal balance;
+    private Long receiverAccountId;
 
     @Column(nullable = false)
-    private Currency ccy;
+    private BigDecimal amount;
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
-    private Boolean active = true;
+    private Status status;
 
-    @Column(nullable = false)
-    private Boolean deleted = false;
+    @Column(columnDefinition = "text")
+    private String errorDetails;
 
     @Getter
     @CreationTimestamp

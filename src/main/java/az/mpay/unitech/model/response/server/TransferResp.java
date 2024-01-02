@@ -1,6 +1,7 @@
 package az.mpay.unitech.model.response.server;
 
 import az.mpay.unitech.model.dto.server.AccountDto;
+import az.mpay.unitech.model.dto.server.TransferDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,17 +15,16 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-@JsonInclude(NON_EMPTY)
 public class TransferResp extends BaseResponse {
 
-    private List<AccountDto> accounts;
+    private List<TransferDto> transfers;
 
-    private TransferResp(List<AccountDto> dtoList) {
+    private TransferResp(List<TransferDto> dtoList) {
         super(ok, "processed successfully");
-        accounts = dtoList;
+        transfers = dtoList;
     }
 
-    public static TransferResp of(List<AccountDto> dtoList) {
+    public static TransferResp of(List<TransferDto> dtoList) {
         return new TransferResp(dtoList);
     }
 }

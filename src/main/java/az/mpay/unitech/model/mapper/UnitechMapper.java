@@ -3,11 +3,10 @@ package az.mpay.unitech.model.mapper;
 import az.mpay.unitech.model.dto.client.UberDriverProfileDto;
 import az.mpay.unitech.model.dto.server.AccountDto;
 import az.mpay.unitech.model.dto.server.DriverProfileDto;
+import az.mpay.unitech.model.dto.server.TransferDto;
 import az.mpay.unitech.model.dto.server.UserDto;
-import az.mpay.unitech.model.entity.Account;
-import az.mpay.unitech.model.entity.DriverProfile;
-import az.mpay.unitech.model.entity.ProfileScheduleRun;
-import az.mpay.unitech.model.entity.User;
+import az.mpay.unitech.model.entity.*;
+import az.mpay.unitech.model.request.server.TransferRequest;
 import az.mpay.unitech.model.request.server.UserRequest;
 import az.mpay.unitech.model.response.client.DriverProfilesResp;
 import org.mapstruct.DecoratedWith;
@@ -28,6 +27,10 @@ import java.util.List;
 public interface UnitechMapper {
 
     User fromRequest(UserRequest request);
+
+    Transfer fromRequest(TransferRequest request);
+
+    TransferDto toDto(Transfer transfer);
 
     UserDto toDto(User user);
 

@@ -84,4 +84,18 @@ public class UnitechController {
 
         return unitechService.transfer(authService.checkUser(token), request);
     }
+
+    @Operation(summary = "Make transfer")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200 - OK", description = "Transfers completed"),
+            @ApiResponse(responseCode = "400 - Bad Request", description = "Client validation errors"),
+            @ApiResponse(responseCode = "404 - Not Found", description = "User not found exception"),
+            @ApiResponse(responseCode = "500 - Internal Server Error", description = "Internal error exception")
+    })
+    @PostMapping(TRANSFER)
+    public TransferResp currencyRate(@RequestHeader("Authorization") String token,
+                                     @RequestBody @Valid List<TransferRequest> request) {
+
+        return unitechService.transfer(authService.checkUser(token), request);
+    }
 }
