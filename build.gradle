@@ -12,7 +12,7 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
-	bootJar.archiveName = 'ms-uber.jar'
+	bootJar.archiveName = 'ms-unitech.jar'
 }
 
 repositories {
