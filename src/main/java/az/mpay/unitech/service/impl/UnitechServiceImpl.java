@@ -1,21 +1,31 @@
 package az.mpay.unitech.service.impl;
 
-import az.mpay.unitech.exception.*;
+import az.mpay.unitech.constant.enums.Currency;
+import az.mpay.unitech.exception.UserAlreadyExistsException;
+import az.mpay.unitech.exception.UserNotFoundException;
+import az.mpay.unitech.exception.ValidationException;
+import az.mpay.unitech.model.dto.server.CurrencyRateDto;
 import az.mpay.unitech.model.dto.server.LoginDto;
 import az.mpay.unitech.model.dto.server.TransferDto;
 import az.mpay.unitech.model.entity.*;
 import az.mpay.unitech.model.mapper.UnitechMapper;
-import az.mpay.unitech.model.request.server.UserRequest;
+import az.mpay.unitech.model.request.server.CurrencyRateRequest;
 import az.mpay.unitech.model.request.server.TransferRequest;
+import az.mpay.unitech.model.request.server.UserRequest;
 import az.mpay.unitech.model.response.server.*;
 import az.mpay.unitech.repository.*;
+import az.mpay.unitech.service.MockCurrencyRateService;
 import az.mpay.unitech.service.UnitechService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static az.mpay.unitech.constant.enums.Status.FAILED;
 import static az.mpay.unitech.constant.enums.Status.SUCCESS;
@@ -29,11 +39,14 @@ public class UnitechServiceImpl implements UnitechService {
     private final TokenRepo tokenRepo;
     private final AccountRepo accountRepo;
     private final TransferRepo transferRepo;
+    private final CurrencyRateRepo currencyRateRepo;
 
     private final UnitechMapper mapper;
 
+    private final MockCurrencyRateService mockCurrencyRateService;
+
     @Override
-    public RegisterUserResp registerUser(UserRequest request) {
+    public RegisterResp registerUser(UserRequest request) {
 
         log.info("Register user is called. Request: {}", request);
 
@@ -41,7 +54,7 @@ public class UnitechServiceImpl implements UnitechService {
             throw new UserAlreadyExistsException("User with pin '%s' already registered", request.getPin());
         }
 
-        return RegisterUserResp.of(mapper.toDto(userRepo.save(mapper.fromRequest(request))));
+        return RegisterResp.of(mapper.toDto(userRepo.save(mapper.fromRequest(request))));
     }
 
     @Override
@@ -56,6 +69,7 @@ public class UnitechServiceImpl implements UnitechService {
         Token authToken = tokenRepo.save(Token.builder()
                                               .pin(request.getPin())
                                               .token(UUID.randomUUID().toString().replace("-", ""))
+                                              .expiredAt(OffsetDateTime.now().plusDays(30))
                                               .build());
 
         return LoginResp.of(LoginDto.builder()
@@ -174,5 +188,44 @@ public class UnitechServiceImpl implements UnitechService {
         String errorDetails = String.format(errorText, args);
         transfer.setErrorDetails(errorDetails);
         log.warn(errorDetails);
+    }
+
+    @Override
+    public CurrencyRateResp getCurrencyRate(Long userId, CurrencyRateRequest request) {
+
+        log.info("Get currency rate is called. User id: {}, currency rate request: {}", userId, request);
+
+        Optional<User> userOpt = userRepo.findById(userId);
+
+        if (userOpt.isEmpty()) {
+            throw new UserNotFoundException("User '%s' not found", userId);
+        }
+
+        CurrencyRateDto currencyRateDto;
+        Optional<CurrencyRate> currencyRateOpt = currencyRateRepo.findByFromAndTo(request.getFrom(), request.getTo());
+
+        if (currencyRateOpt.isPresent()) {
+            if (currencyRateOpt.get().getUpdatedAt().plusMinutes(1).isAfter(OffsetDateTime.now())) {
+                currencyRateDto = mapper.toDto(currencyRateOpt.get());
+            } else {
+                currencyRateDto = getLatestCurrencyRate(request.getFrom(), request.getTo());
+                currencyRateRepo.save(currencyRateOpt.get().toBuilder().rate(currencyRateDto.getRate()).build());
+            }
+        } else {
+            currencyRateDto = getLatestCurrencyRate(request.getFrom(), request.getTo());
+            currencyRateRepo.save(mapper.fromDto(currencyRateDto));
+        }
+
+        return CurrencyRateResp.of(currencyRateDto);
+    }
+
+    private CurrencyRateDto getLatestCurrencyRate(Currency from, Currency to) {
+        CurrencyRateDto currencyRateDto = mockCurrencyRateService.getCurrencyRate(from, to);
+
+        if (currencyRateDto == null) {
+            throw new ValidationException(String.format("Invalid currency rate request. From: %s, to: %s", from, to));
+        }
+
+        return currencyRateDto;
     }
 }

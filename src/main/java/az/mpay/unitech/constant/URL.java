@@ -10,4 +10,5 @@ public class URL {
     public static final String LOGIN = "login";
     public static final String ACCOUNTS = "accounts";
     public static final String TRANSFER = "transfer";
+    public static final String GET_CURRENCY_RATE = "get-currency-rate";
 }

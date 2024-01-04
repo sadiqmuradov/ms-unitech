@@ -1,4 +1,4 @@
-package az.mpay.unitech.exception;
+package az.mpay.unitech.exception.handler;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;

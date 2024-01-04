@@ -1,8 +1,8 @@
 package az.mpay.unitech.controller;
 
+import az.mpay.unitech.model.request.server.CurrencyRateRequest;
 import az.mpay.unitech.model.request.server.TransferRequest;
 import az.mpay.unitech.model.request.server.UserRequest;
-import az.mpay.unitech.model.response.client.UserAccountsResp;
 import az.mpay.unitech.model.response.server.*;
 import az.mpay.unitech.service.AuthService;
 import az.mpay.unitech.service.UnitechService;
@@ -16,7 +16,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-
 import java.util.List;
 
 import static az.mpay.unitech.constant.URL.*;
@@ -40,7 +39,7 @@ public class UnitechController {
             @ApiResponse(responseCode = "500 - Internal Server Error", description = "Internal error exception")
     })
     @PostMapping(USERS)
-    public RegisterUserResp registerUser(@RequestBody @Valid UserRequest request) {
+    public RegisterResp registerUser(@RequestBody @Valid UserRequest request) {
 
         return unitechService.registerUser(request);
     }
@@ -85,17 +84,17 @@ public class UnitechController {
         return unitechService.transfer(authService.checkUser(token), request);
     }
 
-    @Operation(summary = "Make transfer")
+    @Operation(summary = "Get selected currency rate")
     @ApiResponses({
-            @ApiResponse(responseCode = "200 - OK", description = "Transfers completed"),
+            @ApiResponse(responseCode = "200 - OK", description = "Retrieved currency rate"),
             @ApiResponse(responseCode = "400 - Bad Request", description = "Client validation errors"),
             @ApiResponse(responseCode = "404 - Not Found", description = "User not found exception"),
             @ApiResponse(responseCode = "500 - Internal Server Error", description = "Internal error exception")
     })
-    @PostMapping(TRANSFER)
-    public TransferResp currencyRate(@RequestHeader("Authorization") String token,
-                                     @RequestBody @Valid List<TransferRequest> request) {
+    @PostMapping(GET_CURRENCY_RATE)
+    public CurrencyRateResp currencyRate(@RequestHeader("Authorization") String token,
+                                         @RequestBody @Valid CurrencyRateRequest request) {
 
-        return unitechService.transfer(authService.checkUser(token), request);
+        return unitechService.getCurrencyRate(authService.checkUser(token), request);
     }
 }

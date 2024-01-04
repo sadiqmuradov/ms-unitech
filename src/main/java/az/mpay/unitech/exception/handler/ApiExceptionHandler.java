@@ -1,14 +1,7 @@
 package az.mpay.unitech.exception.handler;
 
-import az.mpay.unitech.exception.ApiException;
-import az.mpay.unitech.exception.CoinNotFoundException;
-import az.mpay.unitech.exception.InsufficientBalanceException;
-import az.mpay.unitech.exception.MultipleAccountsException;
-import az.mpay.unitech.exception.UserAlreadyExistsException;
-import az.mpay.unitech.exception.ProfileNotFoundException;
-import az.mpay.unitech.exception.TransactionDeclinedException;
-import az.mpay.unitech.exception.TransactionLogNotFoundException;
 import az.mpay.unitech.exception.UnauthorizedException;
+import az.mpay.unitech.exception.UserAlreadyExistsException;
 import az.mpay.unitech.exception.UserNotFoundException;
 import az.mpay.unitech.exception.ValidationException;
 import org.apache.commons.lang3.StringUtils;
@@ -27,8 +20,6 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler({
             UserNotFoundException.class,
-            CoinNotFoundException.class,
-            ProfileNotFoundException.class,
             UnsupportedOperationException.class
     })
     public ResponseEntity<Object> handleNotFoundExceptions(RuntimeException exception) {
@@ -56,8 +47,6 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler({
             ValidationException.class,
-            InsufficientBalanceException.class,
-            TransactionDeclinedException.class,
             MethodArgumentNotValidException.class
     })
     public ResponseEntity<Object> handleBadRequestExceptions(Exception exception) {
@@ -105,7 +94,6 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler({
-            TransactionLogNotFoundException.class,
             Exception.class
     })
     public ResponseEntity<Object> handleInternalExceptions(Exception exception) {

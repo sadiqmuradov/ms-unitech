@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import static az.mpay.unitech.constant.Constant.ok;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 
 @Data
@@ -18,11 +17,4 @@ public class BaseResponse {
 
     private String status;
     private String message;
-
-    public static BaseResponse success() {
-        return BaseResponse.builder()
-                .status(ok)
-                .message("processed successfully")
-                .build();
-    }
 }

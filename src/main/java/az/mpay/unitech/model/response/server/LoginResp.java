@@ -1,13 +1,11 @@
 package az.mpay.unitech.model.response.server;
 
 import az.mpay.unitech.model.dto.server.LoginDto;
-import az.mpay.unitech.model.dto.server.UserDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import static az.mpay.unitech.constant.Constant.ok;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 
 @Data
@@ -19,7 +17,7 @@ public class LoginResp extends BaseResponse {
     private LoginDto login;
 
     private LoginResp(LoginDto dto) {
-        super(ok, "processed successfully");
+        super("ok", "processed successfully");
         login = dto;
     }
 

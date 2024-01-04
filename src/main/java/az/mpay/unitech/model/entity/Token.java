@@ -2,7 +2,6 @@ package az.mpay.unitech.model.entity;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.OffsetDateTime;
@@ -35,6 +34,5 @@ public class Token {
     private OffsetDateTime createdAt;
 
     @Getter
-    @UpdateTimestamp
-    private OffsetDateTime updatedAt;
+    private OffsetDateTime expiredAt;
 }

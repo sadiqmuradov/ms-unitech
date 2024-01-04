@@ -1,20 +1,18 @@
 package az.mpay.unitech.service.impl;
 
-import az.mpay.unitech.exception.*;
-import az.mpay.unitech.model.entity.*;
-import az.mpay.unitech.repository.*;
+import az.mpay.unitech.exception.UnauthorizedException;
+import az.mpay.unitech.exception.UserNotFoundException;
+import az.mpay.unitech.model.entity.Token;
+import az.mpay.unitech.model.entity.User;
+import az.mpay.unitech.repository.TokenRepo;
+import az.mpay.unitech.repository.UserRepo;
 import az.mpay.unitech.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
 import java.util.Optional;
-
-import static az.mpay.unitech.constant.enums.Currency.created;
-import static az.mpay.unitech.constant.enums.Currency.declined;
-import static az.mpay.unitech.constant.enums.Currency.exception;
-import static az.mpay.unitech.constant.enums.Currency.processed;
-import static az.mpay.unitech.constant.enums.Currency.processing;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,10 +25,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Long checkUser(String token) {
 
-        Optional<Token> tokenOpt = tokenRepo.findByToken(token);
+        Optional<Token> tokenOpt = tokenRepo.findByTokenAndExpiredAtAfter(token, OffsetDateTime.now());
 
         if (tokenOpt.isEmpty()) {
-            throw new TokenNotFoundException("Authorization token is invalid");
+            throw new UnauthorizedException("Authorization failed");
         }
 
         Optional<User> userOpt = userRepo.findByPin(tokenOpt.get().getPin());
